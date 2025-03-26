@@ -7,7 +7,8 @@
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
+    "deploy": "permaweb-deploy --deploy-folder ./build --ant-process $DEPLOY_ANT_PROCESS_ID",
+    "deploy-undername": "permaweb-deploy --deploy-folder ./build --ant-process $DEPLOY_ANT_PROCESS_ID --undername $DEPLOY_UNDERNAME",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
@@ -27,6 +28,7 @@
     "@docusaurus/module-type-aliases": "3.7.0",
     "@docusaurus/tsconfig": "3.7.0",
     "@docusaurus/types": "3.7.0",
+    "permaweb-deploy": "^1.1.10",
     "typescript": "~5.6.2"
   },
   "browserslist": {

@@ -1,0 +1,75 @@
+name: Deploy To Arweave & ARNS
+
+# Deploy to arweave
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Arweave-build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository code
+      - uses: actions/checkout@v2
+
+      # Set up Node.js environment
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: "22"
+
+      # Verify that required secrets are present
+      # DEPLOY_KEY: Your Arweave wallet key (required)
+      # DEPLOY_ANT_PROCESS_ID: Your ArNS name's ANT process ID (required)
+      # DEPLOY_UNDERNAME: Optional undername to deploy to
+      - name: Check required secrets
+        run: |
+          if [ -z "$DEPLOY_KEY" ]; then
+            echo "Error: DEPLOY_KEY secret is required but not set"
+            exit 1
+          fi
+          if [ -z "$DEPLOY_ANT_PROCESS_ID" ]; then
+            echo "Error: DEPLOY_ANT_PROCESS_ID secret is required but not set"
+            exit 1
+          fi
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          DEPLOY_ANT_PROCESS_ID: ${{ secrets.DEPLOY_ANT_PROCESS_ID }}
+
+      # Install project dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Build project
+      - name: Build project
+        run: npm run build
+
+      # Default deployment configuration:
+      # This requires DEPLOY_UNDERNAME to be set, ensuring deployments always use an undername
+      - name: Deploy with undername (default)
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          DEPLOY_ANT_PROCESS_ID: ${{ secrets.DEPLOY_ANT_PROCESS_ID }}
+          DEPLOY_UNDERNAME: ${{ secrets.DEPLOY_UNDERNAME }}
+        run: |
+          if [ -z "$DEPLOY_UNDERNAME" ]; then
+            echo "Error: DEPLOY_UNDERNAME secret is required but not set"
+            echo "Please set the DEPLOY_UNDERNAME secret in your repository settings"
+            echo "If you want to deploy without an undername, use the alternative configuration below"
+            exit 1
+          fi
+          echo "Deploying with undername: $DEPLOY_UNDERNAME"
+          npm run deploy-undername
+
+      # Alternative deployment configuration (commented out):
+      # Use this if you want to deploy directly to the base ArNS without an undername
+      # To use this, comment out the above "Deploy with undername" step and uncomment this one
+      #- name: Deploy without undername
+      #  env:
+      #    DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+      #    DEPLOY_ANT_PROCESS_ID: ${{ secrets.DEPLOY_ANT_PROCESS_ID }}
+      #  run: |
+      #    echo "Deploying without undername to base ArNS"
+      #    npm run deploy

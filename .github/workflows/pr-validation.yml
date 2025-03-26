@@ -1,0 +1,36 @@
+name: PR Validation
+
+# Run on pull requests to the main branch
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-validation:
+    name: Build Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Set up Node.js environment
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: "22"
+          cache: 'npm'
+
+      # Install project dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Build project to validate it compiles successfully
+      - name: Build project
+        run: npm run build
+
+      # Add a success message
+      - name: Build successful
+        run: echo "✅ Build completed successfully! The PR can be merged safely."
