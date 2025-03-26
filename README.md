@@ -1,4 +1,9 @@
 # ArcAO Docusaurus + ARIO Template
+<div align="center">
+
+[![Live Demo](https://img.shields.io/badge/demo-live-green?style=for-the-badge)](https://docs-template_game.permagate.io/)
+
+</div>
 
 This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
