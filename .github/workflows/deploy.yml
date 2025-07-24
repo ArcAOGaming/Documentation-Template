@@ -41,6 +41,10 @@ jobs:
       # Install project dependencies
       - name: Install dependencies
         run: npm install
+      
+      # Build Project
+      - name: Build Project
+        run: npm run build
 
       # Default deployment configuration:
       # This requires DEPLOY_UNDERNAME to be set, ensuring deployments always use an undername
